@@ -37,6 +37,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -140,6 +141,23 @@ public class SessionDigestResource {
         Map<String, Object> resultMap = new HashMap<>(1);
         resultMap.put("pushSwitch", !sessionServerConfig.isStopPushSwitch() ? "open" : "closed");
         return resultMap;
+    }
+
+    @GET
+    @Path("getDataInfoIdList")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Collection<String> getDataInfoIdList() {
+        Collection<String> ret = new HashSet<>();
+        ret.addAll(sessionInterests.getInterestDataInfoIds());
+        ret.addAll(sessionDataStore.getStoreDataInfoIds());
+        return ret;
+    }
+
+    @GET
+    @Path("checkSumDataInfoIdList")
+    @Produces(MediaType.APPLICATION_JSON)
+    public int checkSumDataInfoIdList() {
+        return getDataInfoIdList().hashCode();
     }
 
     private void fillServerList(String type,
